@@ -1,0 +1,16 @@
+<a class="{{className}}" href="{{this.url}}"{{{htmlAttr attributes}}}>
+    <i class="show-parent fa fa-caret-left"></i>
+    {{t title}}
+    {{#if children.length}}
+    <i class="open-children pull-right fa fa-plus-circle"></i>
+    <i class="close-children pull-right fa fa-minus-circle"></i>
+    <i class="show-children pull-right fa fa-caret-right"></i>
+    {{/if}}
+</a>
+{{#if children.length}}
+<ul class="menu-children nav nav-pills nav-stacked">
+{{#each children}}
+    <li id={{id}} role="presentation" class="menu-item has-parent{{#if children.length}} has-children{{/if}}">{{{apply this 'template' this}}}</li>
+{{/each}}
+</ul>
+{{/if}}

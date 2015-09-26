@@ -1,0 +1,37 @@
+<div class="container-fluid">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#{{id}}_navbar">
+            <i class="fa fa-gears"></i>
+            <span class="icon-bar"></span>
+        </button>
+        <button type="button" class="toggle-menu navbar-toggle">
+            <i class="fa fa-bars"></i>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{{homepage}}">{{t 'brand'}}</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="{{id}}_navbar">
+        <ul class="nav navbar-nav navbar-right settings">
+            <li>
+                <span class="dropdown">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="{{t 'change-language'}}">
+                        <img src="{{baseUrl}}images/blank.gif" class="flag flag-{{language.flag}}" alt="{{language.label}}" />
+                        {{language.label}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">{{#each languages as |value key|}}
+                        {{#unless value.disabled}}
+                        <li>
+                            <a href="#" class="chg-lng" language="{{value.language}}">
+                                <img src="{{baseUrl}}images/blank.gif" class="flag flag-{{value.flag}}" alt="{{value.label}}" />
+                                <span class="text">{{value.label}}</span>
+                            </a>
+                        </li>
+                        {{/unless}}
+                    {{/each}}</ul>
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
