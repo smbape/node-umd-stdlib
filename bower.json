@@ -28,7 +28,7 @@
     "json3": "~3.3.2",
     "lodash": "~3.10.0",
     "moment": "~2.10.5",
-    "qs": "~5.1.0"
+    "qs": "git+https://github.com/hapijs/qs#~5.1.0"
   },
   "overrides": {
     "backbone": {
