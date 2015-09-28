@@ -13,13 +13,13 @@
   "dependencies": {
     "async": "~1.4.2",
     "backbone": "~1.2.1",
-    "backbone-validation": "~0.11.5",
+    "backbone.validation": "~0.11.5",
     "bootstrap": "~3.3.5",
-    "colorbox": "~1.6.3",
     "eventEmitter": "~4.2.11",
     "font-awesome": "~4.4.0",
     "handlebars": "~4.0.2",
     "jquery": "1.x",
+    "jquery-colorbox": "~1.6.3",
     "jquery-mockjax": "~2.0.1",
     "jquery-mousewheel": "~3.1.13",
     "jquery-splendid-textchange": "git+https://github.com/spicyj/jquery-splendid-textchange.git",
@@ -37,7 +37,7 @@
         "lodash": "*"
       }
     },
-    "backbone-validation": {
+    "backbone.validation": {
       "dependencies": {
         "backbone": "*"
       },
@@ -51,14 +51,6 @@
       ],
       "exports": "$.fn.emulateTransitionEnd"
     },
-    "colorbox": {
-      "main": [
-        "jquery.colorbox.js",
-        "example1/colorbox.css",
-        "example1/**"
-      ],
-      "exports": "jQuery.colorbox"
-    },
     "font-awesome": {
       "main": [
         "css/font-awesome.css",
@@ -67,6 +59,14 @@
     },
     "handlebars": {
       "main": "handlebars.runtime.js"
+    },
+    "jquery-colorbox": {
+      "main": [
+        "jquery.colorbox.js",
+        "example1/colorbox.css",
+        "example1/**"
+      ],
+      "exports": "jQuery.colorbox"
     },
     "jquery-splendid-textchange": {
       "dependencies": {
