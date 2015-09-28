@@ -13,7 +13,7 @@
   "dependencies": {
     "async": "~1.4.2",
     "backbone": "~1.2.1",
-    "backbone.validation": "~0.11.5",
+    "backbone.validation": "backbone-validation#~0.11.5",
     "bootstrap": "~3.3.5",
     "eventEmitter": "~4.2.11",
     "font-awesome": "~4.4.0",
@@ -37,7 +37,7 @@
         "lodash": "*"
       }
     },
-    "backbone.validation": {
+    "backbone-validation": {
       "dependencies": {
         "backbone": "*"
       },
