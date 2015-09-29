@@ -1,10 +1,11 @@
 {
+  "author": "Stéphane Mbape",
   "name": "umd-stdlib",
   "version": "1.0.0",
   "main": "**",
   "umd": true,
   "ignore": [
-    ".*",
+    "**/.*",
     "component.json",
     "package.json",
     "node_modules"
@@ -37,7 +38,7 @@
         "lodash": "*"
       }
     },
-    "backbone-validation": {
+    "backbone.validation": {
       "dependencies": {
         "backbone": "*"
       },
@@ -107,6 +108,9 @@
         "themes/redmond/jquery-ui.css",
         "themes/redmond/images/**"
       ]
+    },
+    "underscore": {
+      "main": "^"
     }
   }
 }

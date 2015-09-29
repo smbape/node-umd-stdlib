@@ -6,8 +6,6 @@ deps = [
     'umd-stdlib/core/i18next'
     'umd-stdlib/core/StackArray'
     'umd-stdlib/core/QueryString'
-    {amd: 'jquery-toastmessage-plugin'}
-    {amd: 'colorbox'}
 ]
 
 factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, QueryString)->
