@@ -7,11 +7,12 @@ deps = [
     'umd-stdlib/core/RouterEngine'
     'umd-stdlib/core/i18next'
     'umd-stdlib/core/resources'
+    'umd-stdlib/core/QueryString'
     'umd-stdlib/core/patch'
     'umd-stdlib/core/modernizr.custom'
 ]
 
-factory = (require, async, _, $, Backbone, ClientUtil, RouterEngine, i18n, resources)->
+factory = (require, async, _, $, Backbone, ClientUtil, RouterEngine, i18n, resources, QueryString)->
 
     _flip = (obj)->
         res = {}
@@ -272,7 +273,7 @@ factory = (require, async, _, $, Backbone, ClientUtil, RouterEngine, i18n, resou
         return
 
     _startClient = (location, hasPushState, params, engine)->
-        @set 'hasPushState', hasPushState
+        @hasPushState = hasPushState
 
         url = location.pathname
         queryString = location.search
@@ -324,7 +325,7 @@ factory = (require, async, _, $, Backbone, ClientUtil, RouterEngine, i18n, resou
         return
 
     startHistory = (application, currUrl, url)->
-        hasPushState = application.get 'hasPushState'
+        hasPushState = application.hasPushState
 
         # Start history navigtion
         Backbone.history.start pushState: hasPushState, silent: true
@@ -378,19 +379,19 @@ factory = (require, async, _, $, Backbone, ClientUtil, RouterEngine, i18n, resou
 
             if _char is '!'
                 evt.preventDefault()
-                ClientUtil.setLocationHash href
+                application.setLocationHash href
                 return
 
             if _char is '#'
-                if application.get 'hasPushState'
+                if application.hasPushState
                     evt.preventDefault()
-                    ClientUtil.setLocationHash href
+                    application.setLocationHash href
                     return
 
                 hash = href.substring 1
                 if document.getElementById(hash) or $("[name=#{hash.replace(/([\\\/])/g, '\\$1')}]")[0]
                     evt.preventDefault()
-                    ClientUtil.setLocationHash href
+                    application.setLocationHash href
                     return
 
             # Get the absolute root.
@@ -438,7 +439,7 @@ factory = (require, async, _, $, Backbone, ClientUtil, RouterEngine, i18n, resou
 
         engine = application.get('enginesByName')[type][name].router
 
-        location = ClientUtil.getLocation()
+        location = application.getLocation()
 
         url = engine.getUrl(params) + location.search + location.hash
 
@@ -605,3 +606,46 @@ factory = (require, async, _, $, Backbone, ClientUtil, RouterEngine, i18n, resou
                 if engines.hasOwnProperty name
                     engine = engines[name].router
                     engine.getUrl urlParams, query: queryParams
+
+        getLocation: (url)->
+            if @hasPushState
+                ClientUtil.getPathLocation url
+            else
+                ClientUtil.getHashLocation url
+
+        getQueryString: ->
+            if @hasPushState
+                search = window.location.search
+            else
+                search = ''
+                splitQueryReg = /^#[^?]*(\?[^?]+)$/
+                split = splitQueryReg.exec window.location.hash
+                if Array.isArray split
+                    search = split[1]
+            search
+
+        setLocationHash: (hash)->
+            hash or (hash = @getLocation().hash)
+            return false if not hash
+            if hash.charAt(0) in ['#', '!']
+                hash = hash.substring 1
+            return false if hash.length is 0
+
+            if @hasPushState
+                if window.location.hash is '#' + hash
+                    element = document.getElementById(hash) or $("[name=#{hash.replace(/([\\\/])/g, '\\$1')}]")[0]
+                    element.scrollIntoView() if element
+                else
+                    window.location.hash = '#' + hash
+            else
+                location = ClientUtil.getHashLocation()
+                location.hash = '!' + hash
+                window.location.hash = '#' + location.pathname + location.search + location.hash
+                element = document.getElementById(hash) or $("[name=#{hash}]")[0]
+                element.scrollIntoView() if element
+
+            return true
+
+        getQueryParams: ->
+            search = @getQueryString()
+            QueryString.parse search

@@ -351,7 +351,7 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
                     @dispatch fragment, options
                     return @
 
-            location = ClientUtil.getLocation fragment
+            location = application.getLocation fragment
             if location.pathname.charAt(0) in ['/', '#']
                 location.pathname = location.pathname.substring(1)
 
@@ -359,8 +359,8 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
                 Backbone.history.fragment = null
                 options.trigger = true
             else if @_location and location.pathname is @_location.pathname and location.search is @_location.search
-                location = ClientUtil.getLocation fragment
-                ClientUtil.setLocationHash location.hash
+                location = application.getLocation fragment
+                application.setLocationHash location.hash
                 return @
 
             options.location = location
@@ -379,7 +379,7 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
             else if not _.isPlainObject options
                 options = {}
 
-            location = options.location or ClientUtil.getLocation url
+            location = options.location or application.getLocation url
             url = location.pathname + location.search
 
             prevUrl = @getPrevUrl()
@@ -475,7 +475,7 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
 
                 images = container.find('img')
                 if images.length is 0
-                    ClientUtil.setLocationHash()
+                    application.setLocationHash()
                 else
                     waiting = images.length
                     images.each (index, element)->
@@ -483,7 +483,7 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
                         complete = (evt)->
                             if not loaded && --waiting is 0
                                 loaded = true
-                                ClientUtil.setLocationHash()
+                                application.setLocationHash()
                             return
 
                         if this.complete
