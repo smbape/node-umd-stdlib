@@ -44,12 +44,12 @@ factory = (require, Backbone, GenericView, GenericUtil)->
             return
 
         destroyEvents: ->
-            @model.off 'add', @onAdd, @
-            @model.off 'remove', @onRemove, @
-            @model.off 'reset', @onReset, @
-            @model.off 'change', @onChange, @
-            @model.off 'switch', @render, @
             @_viewAttributes.off 'change', @onChange, @
+            @model.off 'switch', @render, @
+            @model.off 'change', @onChange, @
+            @model.off 'reset', @onReset, @
+            @model.off 'remove', @onRemove, @
+            @model.off 'add', @onAdd, @
             return
 
         initUI: ->

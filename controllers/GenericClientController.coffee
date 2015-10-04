@@ -53,4 +53,4 @@ factory = (require, _, GenericUtil, GenericController)->
         render: (content)->
             if typeof content isnt 'undefined' or typeof @view isnt 'undefined'
                 return @renderView content
-            throw new Error 'Generic Render Exception: ' + err
+            throw new Error 'Generic Render Exception: '
