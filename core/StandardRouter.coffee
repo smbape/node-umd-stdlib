@@ -299,7 +299,7 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
                     hooks[type][name] = []
                     if context and context.length > 0
                         hook = (html, type, name, params, query)->
-                            html = html.replace /\b(href|src|data-main)="(?!https?:\/\/|\/)([^"]+)/g, "$1=\"#{context}$2"
+                            html = html.replace /\b(href|src|data-main)="(?!https?\:\/\/|[\/#!])([^"]+)/g, "$1=\"#{context}$2"
                         hooks[type][name][0] = hook
                 return
 
