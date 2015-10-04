@@ -1,16 +1,20 @@
 {
-  "author": "Stéphane Mbape",
   "name": "umd-stdlib",
   "version": "1.0.0",
+  "authors": [
+    "StÃ©phane MBAPE"
+  ],
+  "description": "Umd client standard library",
   "main": "**",
   "umd": true,
+  "license": "MIT",
   "ignore": [
     "**/.*",
-    "component.json",
-    "package.json",
-    "node_modules"
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
   ],
-  "licenses": "MIT",
   "dependencies": {
     "async": "~1.4.2",
     "backbone": "~1.2.1",
@@ -112,5 +116,8 @@
     "underscore": {
       "main": "^"
     }
+  },
+  "resolutions": {
+    "jquery": "1.x"
   }
 }

@@ -1,0 +1,18 @@
+{
+  "name": "umd-stdlib",
+  "version": "1.0.0",
+  "description": "Umd client standard library",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.smbape.com/smbape/node-umd-stdlib"
+  },
+  "author": "Stéphane MBAPE",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/smbape/node-umd-stdlib/issues"
+  },
+  "homepage": "https://github.com/smbape/node-umd-stdlib"
+}
