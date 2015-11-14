@@ -180,7 +180,7 @@
             node.charset = 'utf-8'
             node.async = true
             for own attr, value of attributes
-                if attr isnt 'tag'
+                if attr isnt 'tag' and node[attr] isnt value
                     node.setAttribute attr, value
 
             context = getContext callback, errback, completeback
@@ -297,17 +297,19 @@
                     return
 
         exports.load = load
-        exports.loadScript = (src, attributes, callback, errback, completeback)->
+        exports.getScript = getScript = (src)->
             scripts = head.getElementsByTagName 'script'
             a = document.createElement 'a'
             a.setAttribute 'href', src
             for script in scripts
                 if script.src is a.href
-                    found = true
+                    found = script
                     break
             a = null
 
-            if found
+            return found
+        exports.loadScript = (src, attributes, callback, errback, completeback)->
+            if getScript src
                 # console.log 'script already loaded', src
                 callback() if typeof callback is 'function'
                 completeback() if typeof completeback is 'function'

@@ -167,6 +167,7 @@ factory = (require, _, GenericUtil, QueryString)->
                 else
                     @baseUrl = baseUrl + '/'
             @baseUrl
+
         # Match given url against url template
         # @param [String] url url to match
         # @return [Object] Object of matches

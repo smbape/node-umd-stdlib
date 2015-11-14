@@ -222,15 +222,11 @@ factory = (require)->
                 else
                     0
 
-        comparators.PropertyComarator = PropertyComarator = (property)->
+        comparators.PropertyComarator = (property)->
             (a, b)->
                 compareProperty a, b, property
 
         comparators.PropertiesComparator = (properties)->
-            comparators = []
-            for property in properties
-                comparators.push PropertyComarator property
-
             (a, b)->
                 for property in properties
                     if 0 isnt (res = compareProperty a, b, property)

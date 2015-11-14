@@ -17,7 +17,6 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
         (content and content.$el) or $ document.body
 
     notifyError = (msg, err, container)->
-        application.trigger 'loading:error', msg, err, container
         $().toastmessage 'showToast',
             text     : i18n.t msg
             position : 'top-right'
@@ -215,7 +214,7 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
             #     errback err
             #     return
 
-            if exported
+            if not err and 'undefined' isnt typeof exported
                 title = config.title.getUrl urlParams if config.title
                 callback {data: exported, title: title}, {name: config.name, type: config.type, url: urlParams}
                 return
@@ -299,7 +298,7 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
                     hooks[type][name] = []
                     if context and context.length > 0
                         hook = (html, type, name, params, query)->
-                            html = html.replace /\b(href|src|data-main)="(?!https?\:\/\/|[\/#!])([^"]+)/g, "$1=\"#{context}$2"
+                            html = html.replace /\b(href|src|data-main)="(?!mailto:|https?\:\/\/|[\/#!])([^"]+)/g, "$1=\"#{context}$2"
                         hooks[type][name][0] = hook
                 return
 
@@ -396,7 +395,7 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
                     isPopin = true
                     container = $ ensurePopin()
                 else
-                    notifyError i18n.t 'error.container'
+                    @notifyError i18n.t 'error.container'
                     return
 
             mainContainer = getMainContainer()
@@ -404,13 +403,14 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
                 container = mainContainer
                 @addHistory url
 
-            application.trigger 'loading', container
             self = router = @
 
+            application.trigger 'loading', {container, isPopin, url, options}
             findRouter {router, location}, options, (err, rendable, result)->
                 if err
                     if err.code is 'NO_MATCH' and isPopin
                         # let the server handle
+
                         root = ClientUtil.getLocationRoot()
                         if url.charAt(0) is '/'
                             url = root + url
@@ -423,15 +423,16 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
                             iframe: true
                             href: url
 
+                        application.trigger 'loaded', url, options, {container, isPopin}
                         return
 
                     # User notification
                     text = 'Error while retriving params for "' + url + '" \n'
                     console.warn text, err.stack
-                    notifyError err.message, err, container
+                    self.notifyError err.message, err, container
 
-                    if prevUrl
-                        self.navigate prevUrl, {trigger: false, replace: true}
+                    self.navigate prevUrl, {trigger: false, replace: true} if prevUrl
+                    return
 
                 self.run rendable, result, {location, container, mainContainer, isPopin}, options
 
@@ -494,7 +495,10 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
                                 .one('error', complete)
 
                         return
+
                 onRender rendable, container
+                application.trigger 'loaded', {container, type, name, url, query}
+
                 return
 
             if isPopin

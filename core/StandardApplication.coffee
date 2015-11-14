@@ -591,7 +591,7 @@ factory = (require, async, _, $, Backbone, ClientUtil, RouterEngine, i18n, resou
 
         getCurrentParams: -> @router.getParams()
 
-        getLanguage: -> @getCurrentParams().language
+        getLanguage: -> @router.getLanguage()
 
         getLocale: (language)->
             language = @getLanguage() if typeof language isnt 'string'

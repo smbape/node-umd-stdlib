@@ -126,7 +126,7 @@ factory = (require, Backbone, GenericView, GenericUtil)->
                 comparator = GenericUtil.comparators.PropertyComarator comparator
 
             if arguments.length is 1 and 'boolean' is typeof comparator
-                reverse = true
+                reverse = comparator
                 comparator = @model.comparator
 
             if reverse
@@ -190,10 +190,8 @@ factory = (require, Backbone, GenericView, GenericUtil)->
             if model is @model
                 @render()
             else if model is @_viewAttributes
-                if model.changed.sort
-                    comparator = model.changed.sort.attribute
-                    reverse = model.changed.sort.value is 'desc'
-                    @sort comparator, reverse
+                if sort = model.changed.sort
+                    @sort sort.attribute, sort.value is 'desc'
                 else
                     @render()
             else

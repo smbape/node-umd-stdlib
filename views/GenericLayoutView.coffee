@@ -4,6 +4,17 @@ deps = [
 ]
 
 factory = (require, _, GenericView)->
+    _computAppendOptions = (view, options)->
+        if 'string' is typeof options
+            options = selector: options, view: view
+        else if _.isPlainObject view
+            options = _.pick options, ['selector', 'required', 'view']
+        else if _.isPlainObject options
+            options = _.pick options, ['selector', 'required']
+            options.view = view
+
+        options
+
     class GenericLayoutView extends GenericView
         constructor: (options)->
             super
@@ -21,18 +32,22 @@ factory = (require, _, GenericView)->
             @regions = {}
 
         append: (view, options)->
-            if 'string' is typeof options
-                options = selector: options
-            else if _.isPlainObject
-                options = _.pick options, ['selector', 'required']
-                if _.isEmpty options
-                    return @
-            else
-                return @
-
-            options.view = view
+            options = _computAppendOptions view, options
+            return @ if not options.view
+            @remove options
             @children.push options
             return @
+
+        remove: (view, options)->
+            options = _computAppendOptions view, options
+            return @ if not options.view
+
+            for i in [@children - 1...0] by -1
+                if view is @children[i].view and options.selector is @children[i].selector
+                    @children.splice i, 1
+
+            return @
+
         setRegions: (regions)->
             return @ if not _.isPlainObject regions
             for name, selector of regions

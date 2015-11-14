@@ -184,7 +184,11 @@ factory = (require, com, ClientUtil, i18n)->
                 return @type
             getJQueryEl: ->
                 return @$el if @$el and @$el.length is 1
-                $el = $ '#' + @getAttribute 'id'
+                if @view
+                    $el = @view.$el.find '#' + @getAttribute 'id'
+                else
+                    $el = $ '#' + @getAttribute 'id'
+
                 if $el.length is 1
                     @$el = $el
             getContent: ->
@@ -464,13 +468,13 @@ factory = (require, com, ClientUtil, i18n)->
         type: className
         initialize: (name, attributes, options = {})->
             @initialOptions = options.initial
-            if typeof options.initializeUI is 'function'
-                initializeUI = options.initializeUI
-                @initializeUI = ->
-                    @_initializeUI()
-                    initializeUI.call @
+            if typeof options.initUI is 'function'
+                initUI = options.initUI
+                @initUI = ->
+                    @_initUI()
+                    initUI.call @
             else
-                @initializeUI = @_initializeUI
+                @initUI = @_initUI
             if typeof options.destroyUI is 'function'
                 destroyUI = options.destroyUI
                 @destroyUI = ->
@@ -496,11 +500,7 @@ factory = (require, com, ClientUtil, i18n)->
             if info.disabled
                 @setUIOption 'option', 'disabled', info.disabled
             return
-        _initializeUI: ->
-            # console.log 'initialOptions', JSON.stringify @initialOptions
-            # window._$el = @getUI()
-            # _$el.select2(@initialOptions)
-            # _$el.select2('destroy')
+        _initUI: ->
             if $el = @getUI()
                 $el[widget] @initialOptions
                 @_setDisabled()
@@ -508,10 +508,6 @@ factory = (require, com, ClientUtil, i18n)->
         _destroyUI: ->
             if $el = @getUI()
                 $el[widget] 'destroy'
-            return
-        destroy: (options)->
-            @destroyUI()
-            FormHelper.Element::destroy.call @, options
             return
 
         getUI: FormHelper.Element::getJQueryEl
@@ -529,10 +525,10 @@ factory = (require, com, ClientUtil, i18n)->
     for widget in ['autocomplete', 'datepicker']
         createUI widget
 
-    FormHelper.DatepickerUI::_initializeUI = ->
+    FormHelper.DatepickerUI::_initUI = ->
         lng = application.getLanguage()
         $.datepicker.setDefaults $.datepicker.regional[lng]
-        FormHelper.DatepickerUI.UIProto._initializeUI.apply @, arguments
+        FormHelper.DatepickerUI.UIProto._initUI.apply @, arguments
 
     class FormHelper.DatepickerWithFormatUI extends FormHelper.DatepickerUI
         type: 'DatepickerWithFormatUI'
@@ -598,7 +594,7 @@ factory = (require, com, ClientUtil, i18n)->
             info = @getInfo()
             @select.setAttribute 'disabled', info.disabled
             @_startDecorator(xhtml) + @_endDecorator(@select.render())
-        _initializeUI: ->
+        _initUI: ->
             super
             @setUIOption 'option', 'dateFormat', @select.getValue()
             value = @getValue()
@@ -675,8 +671,8 @@ factory = (require, com, ClientUtil, i18n)->
         for method, fn of proto
             FormHelper.SliderUI::[method] = fn
 
-        FormHelper.SliderUI::_initializeUI = ->
-            proto._initializeUI.apply @, arguments
+        FormHelper.SliderUI::_initUI = ->
+            proto._initUI.apply @, arguments
             $ui = @getUI()
             @setUIValue $ui.slider 'value'
 
@@ -789,8 +785,8 @@ factory = (require, com, ClientUtil, i18n)->
             return
 
     ((proto)->
-        FormHelper.SliderRangeUI::_initializeUI = ->
-            proto._initializeUI.apply @, arguments
+        FormHelper.SliderRangeUI::_initUI = ->
+            proto._initUI.apply @, arguments
             $ui = @getUI()
             @setUIValue $ui.slider('values', 0), $ui.slider('values', 1)
 
@@ -832,6 +828,7 @@ factory = (require, com, ClientUtil, i18n)->
     ) UIProto 'slider', 'SliderRangeUI'
 
     viewOnRender = ->
+        self = @
         if @rendered
             # calling render multiple times must destroy previous render
             # otherwise, it will cause a dom leak
@@ -844,13 +841,20 @@ factory = (require, com, ClientUtil, i18n)->
         FormView::onRender.apply @, arguments
 
         for name, element of @elements
-            element.initializeUI() if 'function' is typeof element.initializeUI
+            do (element)->
+                element.view = self
+                self.once 'render', ->
+                    element.initUI() if 'function' is typeof element.initUI
+                    return
+                return
 
         @rendered = true
         return
+
     viewDestroy = ->
         @trigger 'destroy', @
         for name, element of @elements
+            element.destroyUI() if 'function' is typeof element.destroyUI
             element.destroy()
         @close()
         if typeof @.$el isnt 'undefined'
