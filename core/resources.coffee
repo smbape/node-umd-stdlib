@@ -12,6 +12,7 @@ factory = (require)->
             lowercase: 'Missing a lowercase character'
             uppercase: 'Missing an uppercase character'
             special: 'Missing a special character'
+            email: '__attr__ is not a valid email'
         welcome: 'Welcome'
         default: home: index: title: 'Home'
         brand: 'Brand'
@@ -39,6 +40,7 @@ factory = (require)->
             lowercase: 'Une minuscule est requise'
             uppercase: 'Une majuscule est requise'
             special: 'Un caractère spécial est requis'
+            email: "__attr__ n'est pas une adresse email valide"
         welcome: 'Bienvenue'
         default: home: index: title: 'Accueil'
         brand: 'Marque'
