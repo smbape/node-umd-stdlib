@@ -23,8 +23,8 @@ factory = (require)->
             cancel: 'Cancel'
             save: 'Save'
             delete: 'Delete'
-        login: 'Login'
-        logout: 'Logout'
+        login: 'Sign in'
+        logout: 'Sign out'
     'fr-FR': translation:
         label: 'Français'
         error:

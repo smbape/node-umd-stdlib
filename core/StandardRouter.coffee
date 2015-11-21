@@ -21,7 +21,7 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
             text     : i18n.t msg
             position : 'top-right'
             type     : 'error'
-            sticky   : true
+            # sticky   : true
         throw err if err
         return
 
@@ -237,7 +237,7 @@ factory = (require, application, _, Backbone, ClientUtil, i18n, StackArray, Quer
         template: tryTemplate
 
     setRoutingCache = (pathname, type, name)->
-        cache.routing[pathname] = [type, name]
+        cache.routing[pathname.replace(/^\/|\/$/, '')] = [type, name]
         return
 
     findRouter = ({router, location}, options, next)->

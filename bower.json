@@ -21,7 +21,6 @@
     "backbone.validation": "backbone-validation#~0.11.5",
     "bootstrap": "~3.3.5",
     "eventEmitter": "~4.2.11",
-    "font-awesome": "~4.4.0",
     "handlebars": "~4.0.2",
     "jquery": "1.x",
     "jquery-colorbox": "~1.6.3",
@@ -55,12 +54,6 @@
         "dist/fonts/**"
       ],
       "exports": "$.fn.emulateTransitionEnd"
-    },
-    "font-awesome": {
-      "main": [
-        "css/font-awesome.css",
-        "fonts/**"
-      ]
     },
     "handlebars": {
       "main": "handlebars.runtime.js"

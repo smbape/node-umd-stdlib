@@ -108,7 +108,7 @@ factory = (require, com, ClientUtil, menuItemTemplate)->
                 _toShow = parent.closest('.menu-children')
                 _toShow.hide()
                 toShow.show()
-                _toShow.show 'drop', {}, easingDuration
+                _toShow.show 'drop', {direction: 'right'}, easingDuration
 
                 return
             'click .show-children': (evt)->
@@ -127,7 +127,7 @@ factory = (require, com, ClientUtil, menuItemTemplate)->
                 toShow = parent.find '> .menu-children'
 
                 toHide.hide()
-                toShow.show 'drop', {}, easingDuration
+                toShow.show 'drop', {direction: 'left'}, easingDuration
                 return
         constructor: (options = {})->
             super
