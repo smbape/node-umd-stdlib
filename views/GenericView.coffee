@@ -23,8 +23,9 @@ factory = (require, _, Backbone)->
                 if options.controller
                     @controller = options.controller
 
-                if typeof options.template is 'function'
-                    @template = options.template
+                for opt in ['template', 'initUI', 'destroyUI', 'onRender']
+                    if 'function' is typeof options[opt]
+                        @[opt] = options[opt]
 
             return
         initUI: ->
