@@ -13,7 +13,7 @@ factory = (require, com, ClientUtil, i18n, template)->
 
     class HeaderView extends com.gen.views.View
         tagName: 'nav'
-        className: 'navbar navbar-default'
+        className: 'navbar'
         attributes: role: 'navigation'
         template: template
         events:

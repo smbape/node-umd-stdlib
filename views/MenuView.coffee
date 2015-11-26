@@ -58,37 +58,25 @@ factory = (require, com, ClientUtil, menuItemTemplate)->
                 if evt.target is evt.currentTarget
                     $(evt.currentTarget).addClass 'active'
                 else
-                    $(evt.currentTarget).addClass 'opened'
+                    @openChildren $(evt.currentTarget)
                 return
             'de-activate li.menu-item': (evt)->
                 if evt.target is evt.currentTarget
                     $(evt.currentTarget).removeClass 'active'
                 else
-                    $(evt.currentTarget).removeClass 'opened'
+                    @closeChildren $(evt.currentTarget)
                 return
             'click .open-children': (evt)->
                 evt.preventDefault()
                 evt.stopImmediatePropagation()
                 evt.stopPropagation()
-                target = $(evt.currentTarget).closest('.menu-item')
-                target.find('> .menu-children').show 'blind', {
-                    complete: ->
-                        target.addClass 'opened'
-                        $(':focus').blur()
-                        return
-                }, easingDuration
+                @openChildren $(evt.currentTarget).closest('.menu-item')
                 return
             'click .close-children': (evt)->
                 evt.preventDefault()
                 evt.stopImmediatePropagation()
                 evt.stopPropagation()
-                target = $(evt.currentTarget).closest('.menu-item')
-                target.find('> .menu-children').hide 'blind', {
-                    complete: ->
-                        target.removeClass 'opened'
-                        $(':focus').blur()
-                        return
-                }, easingDuration
+                @closeChildren $(evt.currentTarget).closest('.menu-item')
                 return
 
             'click .show-parent': (evt)->
@@ -251,21 +239,28 @@ factory = (require, com, ClientUtil, menuItemTemplate)->
         activate: ->
             @$el.find(':focus').blur()
 
+            activeItem = @getActiveItem application.router.getParameters()
+
             if @activeItem
-                $item = @$el.find '#' + @activeItem.id
-                $item.trigger 'de-activate'
+                $toDeactivate = @$el.find('#' + @activeItem.id)
 
-            item = @getActiveItem application.router.getParameters()
+            if activeItem
+                @activeItem = activeItem
+                $activeItem = @$el.find '#' + @activeItem.id
 
-            if item
-                @activeItem = item
-                $item = @$el.find '#' + @activeItem.id
-                $item.trigger 'activate'
+                if $toDeactivate
+                    if $toDeactivate[0].parentNode is $activeItem[0].parentNode
+                        $toDeactivate.removeClass 'active'
+                    else
+                        $toDeactivate.trigger 'de-activate'
+
+                $activeItem.trigger 'activate'
 
                 if $(document).width() < 768
                     @$el.find('.menu-item.opened').find('> .menu-header > .show-children').click()
             else
                 @activeItem = null
+                $toDeactivate.trigger 'de-activate' if $toDeactivate
 
             return
 
@@ -289,3 +284,21 @@ factory = (require, com, ClientUtil, menuItemTemplate)->
                         break if matched is 1
 
             return ret
+
+        openChildren: ($el)->
+            $el.find('> .menu-children').show 'blind', {
+                complete: ->
+                    $el.addClass 'opened'
+                    $(':focus').blur()
+                    return
+            }, easingDuration
+            return
+
+        closeChildren: ($el)->
+            $el.find('> .menu-children').hide 'blind', {
+                complete: ->
+                    $el.removeClass 'opened'
+                    $(':focus').blur()
+                    return
+            }, easingDuration
+            return
